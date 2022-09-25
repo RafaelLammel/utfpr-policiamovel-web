@@ -1,8 +1,9 @@
 import React, {useContext, useState} from "react";
 import {LoginRequest} from "../../interfaces/requests/LoginRequest";
-import {LoginErrorResponse} from "../../interfaces/responses/LoginErrorResponse";
+import {ErrorResponse} from "../../interfaces/responses/ErrorResponse";
 import AuthContext from "../../contexts/auth";
 import './styles.css';
+import {validateLoginOrCreateUserRequest} from "../../validators/LoginRequestValidator";
 
 export default function LoginPage() {
 
@@ -10,25 +11,6 @@ export default function LoginPage() {
 
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
-
-    const validateLoginRequest = (loginRequest: LoginRequest): boolean => {
-        const errors: string[] = [];
-
-        if (loginRequest.login === '' || loginRequest.login === null) {
-            errors.push('Login é obrigatório!');
-        }
-
-        if (loginRequest.password === '' || loginRequest.password === null) {
-            errors.push('Senha é obrigatória!');
-        }
-
-        if (errors.length === 0) {
-            return true;
-        }
-
-        alert('Erros durante o Login:\n' + errors.join('\n'));
-        return false;
-    };
 
     const handleSubmit = async (e: any) => {
 
@@ -39,7 +21,7 @@ export default function LoginPage() {
             password: password.trim(),
         };
 
-        if (!validateLoginRequest(loginRequest)) {
+        if (!validateLoginOrCreateUserRequest(loginRequest)) {
             return;
         }
 
@@ -49,7 +31,7 @@ export default function LoginPage() {
             return;
         }
 
-        const errors = res as LoginErrorResponse;
+        const errors = res as ErrorResponse;
 
         alert('Erros durante o Login\n' + errors.errorMsgs.join('\n'));
     }

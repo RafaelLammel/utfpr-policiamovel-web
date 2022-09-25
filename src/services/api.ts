@@ -1,7 +1,8 @@
 import axios, {AxiosError} from 'axios';
 import {LoginRequest} from '../interfaces/requests/LoginRequest';
 import {LoginResponse} from '../interfaces/responses/LoginResponse';
-import {LoginErrorResponse} from '../interfaces/responses/LoginErrorResponse';
+import {ErrorResponse} from '../interfaces/responses/ErrorResponse';
+import {CreateUserRequest} from "../interfaces/requests/CreateUserRequest";
 
 const api = axios.create({
   baseURL: 'https://api.tccpm.tk'
@@ -10,7 +11,7 @@ const api = axios.create({
 
 export async function login(
   loginRequest: LoginRequest,
-): Promise<LoginResponse | LoginErrorResponse> {
+): Promise<LoginResponse | ErrorResponse> {
   try {
     const response = await api.post(
       '/api/v1/authentication/login',
@@ -25,20 +26,51 @@ export async function login(
       return {
         errorMsgs: ['Algo deu errado no servidor! Tente novamente mais tarde'],
       };
-    } else if (e.response?.status === 404) {
+    } if (e.response?.status === 404) {
       return {errorMsgs: ['Login ou senha incorretos!']};
     }
 
-    const loginErrorResponse: LoginErrorResponse = {
+    const errorResponse: ErrorResponse = {
       errorMsgs: [],
-    } as LoginErrorResponse;
+    } as ErrorResponse;
     const errors: any = e.response?.data;
 
     Object.values(errors.errors).forEach(value => {
       const errorList = value as string[];
-      errorList.forEach(v => loginErrorResponse.errorMsgs.push(v));
+      errorList.forEach(v => errorResponse.errorMsgs.push(v));
     });
 
-    return loginErrorResponse;
+    return errorResponse;
+  }
+}
+
+export async function createUser(
+  createUserRequest: CreateUserRequest
+): Promise<number | string | ErrorResponse> {
+  try {
+    const response = await api.post('/api/v1/User', createUserRequest, {
+      headers:{
+        Authorization: "Bearer " + localStorage.getItem("@auth:token")
+      }
+    });
+
+    return response.status;
+  }catch (error) {
+    const e = error as AxiosError;
+
+    if (e.response?.status === 500) {
+      return {
+        errorMsgs: ['Algo deu errado no servidor! Tente novamente mais tarde'],
+      };
+    }
+    if(e.response?.status === 401) {
+      return {
+        errorMsgs: ["Usuário não autorizado ou a sessão expirou. Por favor, refaça seu login."]
+      };
+    }
+
+    return {
+      errorMsgs: ["Esse login já existe."]
+    };
   }
 }
