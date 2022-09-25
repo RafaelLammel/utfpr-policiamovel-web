@@ -1,42 +1,61 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import AuthContext from '../../contexts/auth';
+import { LocationsResponse } from '../../interfaces/responses/LocationsResponse';
+import { LoginErrorResponse } from '../../interfaces/responses/LoginErrorResponse';
+import { getLocations } from '../../services/api';
 
 export default function HomePage() {
-  var arrCordinates = [[-25.5478553, -49.3416572], [-25.5678553, -49.3616572], [-25.5878553, -49.3816572]]
-  const [coords, setcoords] = useState(arrCordinates);
+  const { signOut } = useContext(AuthContext);
+  const [coords, setcoords] = useState<LocationsResponse>();
 
   useEffect(() => {
+    getLocationsInterval()
+  }, [])
+  
+  useEffect(() => {
     const interval = setInterval(() => {
-      myFunc();
+      getLocationsInterval();
     }, 5000);
     return () => {
       clearInterval(interval);
     };
   }, [coords]);
 
-  const myFunc = () =>  {
-    setcoords([[coords[0][0] + 0.01, coords[0][1] + 0.01], [coords[1][0] + 0.01, coords[1][1] + 0.01], [coords[2][0] + 0.01, coords[2][1] + 0.01]]);
-    console.log("opa");
+  const getLocationsInterval = async () =>  {
+    const res = await getLocations();
+    if (!('locations' in res)){
+      const error = res as LoginErrorResponse
+      if(error.errorMsgs.length != 0){//melhorar isso aqui, verificar se o erro eh 401
+        await signOut();
+      }
+    }
+    else{
+      console.log(res)
+      setcoords(res)
+    }
   }
-  function Teste(){
 
-    return coords.map(coordenada => {
-      return (      
-        <Marker position={coordenada}>
-        </Marker>
-      )
+  function MarkersComponent(){
+    return coords?.locations.map((location) => {
+      if(location.latitude !== null && location.longitude !== null){
+        return (      
+          <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]}>
+            <Popup>
+              {location.userId}
+            </Popup>
+          </Marker>
+        )
+      }
     })
   }
   return (
-    // <div>
-    //     <h1>Hello World</h1>
-    // </div>
     <MapContainer center={[-25.5478553, -49.3416572]} zoom={13} scrollWheelZoom={true}>
-    <TileLayer
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <Teste/>
-  </MapContainer>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <MarkersComponent/>
+    </MapContainer>
   )
 }

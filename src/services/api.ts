@@ -1,6 +1,7 @@
 import axios, {AxiosError} from 'axios';
 import {LoginRequest} from '../interfaces/requests/LoginRequest';
 import {LoginResponse} from '../interfaces/responses/LoginResponse';
+import {LocationsResponse} from '../interfaces/responses/LocationsResponse'
 import {LoginErrorResponse} from '../interfaces/responses/LoginErrorResponse';
 
 const api = axios.create({
@@ -40,5 +41,38 @@ export async function login(
     });
 
     return loginErrorResponse;
+  }
+}
+
+export async function getLocations(): Promise<LocationsResponse | LoginErrorResponse>{//mudar o error aqui tbm
+  try {
+    const response = await api.get('/api/v1/Location', {
+      headers:{
+        Authorization: "Bearer " + localStorage.getItem("@auth:token")
+      }
+    });
+    const responseLocation : LocationsResponse = {
+      locations: []
+    }
+    response.data.map((x: any) => {
+      responseLocation.locations.push({
+        userId: x.userId,
+        longitude: x.longitude,
+        latitude: x.latitude
+      })
+    })
+    return responseLocation;
+  }
+  catch (error){
+    const e = error as AxiosError;
+
+    if (e.response?.status === 500) {
+      return {
+        errorMsgs: ['Algo deu errado no servidor! Tente novamente mais tarde'],
+      };
+    }
+    return {
+      errorMsgs: ["Usuário não autorizado ou a sessão expirou. Por favor, refaça seu login."]
+    };
   }
 }
