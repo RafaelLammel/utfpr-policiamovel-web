@@ -1,0 +1,21 @@
+.button-group {
+    position: absolute;
+    width: 500;
+    height: 500;
+    top: 0;
+    right: 0;
+    z-index: 10000;
+}
+
+.button-map{
+    margin: 5px;
+    background-color: blue;
+    color: white;
+    border: none;
+}
+
+.button-map:hover{
+    background-color: grey;
+    transition: background-color 0.2s ease-out;
+}
+

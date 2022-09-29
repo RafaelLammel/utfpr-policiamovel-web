@@ -3,6 +3,7 @@ import {LoginRequest} from '../interfaces/requests/LoginRequest';
 import {LoginResponse} from '../interfaces/responses/LoginResponse';
 import {ErrorResponse} from '../interfaces/responses/ErrorResponse';
 import {CreateUserRequest} from "../interfaces/requests/CreateUserRequest";
+import { LocationsResponse } from '../interfaces/responses/LocationsResponse';
 
 const api = axios.create({
   baseURL: 'https://api.tccpm.tk'
@@ -25,9 +26,13 @@ export async function login(
     if (e.response?.status === 500) {
       return {
         errorMsgs: ['Algo deu errado no servidor! Tente novamente mais tarde'],
+        cod: e.response?.status
       };
     } if (e.response?.status === 404) {
-      return {errorMsgs: ['Login ou senha incorretos!']};
+      return {
+        errorMsgs: ['Login ou senha incorretos!'],
+        cod: e.response?.status
+      };
     }
 
     const errorResponse: ErrorResponse = {
@@ -61,11 +66,13 @@ export async function createUser(
     if (e.response?.status === 500) {
       return {
         errorMsgs: ['Algo deu errado no servidor! Tente novamente mais tarde'],
+        cod: e.response?.status
       };
     }
     if(e.response?.status === 401) {
       return {
-        errorMsgs: ["Usuário não autorizado ou a sessão expirou. Por favor, refaça seu login."]
+        errorMsgs: ["Usuário não autorizado ou a sessão expirou. Por favor, refaça seu login."],
+        cod: e.response?.status
       };
     }
 
@@ -75,7 +82,7 @@ export async function createUser(
   }
 }
 
-export async function getLocations(): Promise<LocationsResponse | LoginErrorResponse>{//mudar o error aqui tbm
+export async function getLocations(): Promise<LocationsResponse | ErrorResponse>{//mudar o error aqui tbm
   try {
     const response = await api.get('/api/v1/Location', {
       headers:{
@@ -100,10 +107,12 @@ export async function getLocations(): Promise<LocationsResponse | LoginErrorResp
     if (e.response?.status === 500) {
       return {
         errorMsgs: ['Algo deu errado no servidor! Tente novamente mais tarde'],
+        cod: e.response?.status
       };
     }
     return {
-      errorMsgs: ["Usuário não autorizado ou a sessão expirou. Por favor, refaça seu login."]
+      errorMsgs: ["Usuário não autorizado ou a sessão expirou. Por favor, refaça seu login."],
+      cod: e.response?.status
     };
   }
 }

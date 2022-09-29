@@ -2,7 +2,6 @@ import React, {createContext, useEffect, useState} from 'react';
 import {login} from '../services/api';
 import {LoginRequest} from '../interfaces/requests/LoginRequest';
 import {LoginResponse} from '../interfaces/responses/LoginResponse';
-import {LoginErrorResponse} from '../interfaces/responses/LoginErrorResponse';
 import {ErrorResponse} from '../interfaces/responses/ErrorResponse';
 
 interface AuthData {
