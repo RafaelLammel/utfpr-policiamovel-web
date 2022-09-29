@@ -16,14 +16,14 @@ export default function HomePage() {
     getLocationsInterval()
   }, [])
   
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     getLocationsInterval();
-  //   }, 5000);
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [coords]);
+useEffect(() => {
+  const interval = setInterval(() => {
+    getLocationsInterval();
+  }, 5000);
+  return () => {
+    clearInterval(interval);
+  };
+}, [coords]);
 
   const getLocationsInterval = async () =>  {
     const res = await getLocations();
