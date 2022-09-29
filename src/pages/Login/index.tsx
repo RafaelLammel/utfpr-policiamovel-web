@@ -1,8 +1,11 @@
 import React, {useContext, useState} from "react";
 import {LoginRequest} from "../../interfaces/requests/LoginRequest";
 import {LoginErrorResponse} from "../../interfaces/responses/LoginErrorResponse";
+import './styles.css';
+import {ErrorResponse} from "../../interfaces/responses/ErrorResponse";
 import AuthContext from "../../contexts/auth";
 import './styles.css';
+import {validateLoginOrCreateUserRequest} from "../../validators/LoginRequestValidator";
 
 export default function LoginPage() {
 
@@ -39,7 +42,7 @@ export default function LoginPage() {
             password: password.trim(),
         };
 
-        if (!validateLoginRequest(loginRequest)) {
+        if (!validateLoginOrCreateUserRequest(loginRequest)) {
             return;
         }
 
@@ -49,7 +52,7 @@ export default function LoginPage() {
             return;
         }
 
-        const errors = res as LoginErrorResponse;
+        const errors = res as ErrorResponse;
 
         alert('Erros durante o Login\n' + errors.errorMsgs.join('\n'));
     }

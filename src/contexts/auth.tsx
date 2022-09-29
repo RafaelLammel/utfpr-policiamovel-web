@@ -3,12 +3,13 @@ import {login} from '../services/api';
 import {LoginRequest} from '../interfaces/requests/LoginRequest';
 import {LoginResponse} from '../interfaces/responses/LoginResponse';
 import {LoginErrorResponse} from '../interfaces/responses/LoginErrorResponse';
+import {ErrorResponse} from '../interfaces/responses/ErrorResponse';
 
 interface AuthData {
     signed: boolean;
     user: LoginResponse | null;
     loading: boolean;
-    signIn(loginRequest: LoginRequest): Promise<null | LoginErrorResponse>;
+    signIn(loginRequest: LoginRequest): Promise<null | ErrorResponse>;
     signOut(): void;
 }
 
@@ -44,7 +45,7 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
 
         if (!('accessToken' in response)) {
             setLoading(false);
-            return response as LoginErrorResponse;
+            return response as ErrorResponse;
         }
 
         const userResponse = response as LoginResponse;
