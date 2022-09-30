@@ -29,7 +29,7 @@ useEffect(() => {
     const res = await getLocations();
     if (!('locations' in res)){
       const error = res as ErrorResponse
-      if(error.cod === 401){//melhorar isso aqui, verificar se o erro eh 401
+      if(error.cod === 401){
         await signOut();
       }
       else{
