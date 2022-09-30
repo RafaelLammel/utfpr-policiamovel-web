@@ -1,6 +1,5 @@
 import React, {useContext, useState} from "react";
 import {LoginRequest} from "../../interfaces/requests/LoginRequest";
-import {LoginErrorResponse} from "../../interfaces/responses/LoginErrorResponse";
 import './styles.css';
 import {ErrorResponse} from "../../interfaces/responses/ErrorResponse";
 import AuthContext from "../../contexts/auth";
