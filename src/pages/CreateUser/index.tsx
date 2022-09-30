@@ -61,7 +61,7 @@ export default function CreateUserPage() {
                         <label htmlFor="password">Senha</label>
                         <input type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} id="password" />
                     </div>
-                    <input disabled={isLoading} type="submit" value="Login" />
+                    <input disabled={isLoading} type="submit" value="Cadastrar" />
                 </form>
             </div>
         </div>

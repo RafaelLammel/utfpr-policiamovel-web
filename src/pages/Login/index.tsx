@@ -1,5 +1,7 @@
 import React, {useContext, useState} from "react";
 import {LoginRequest} from "../../interfaces/requests/LoginRequest";
+import {LoginErrorResponse} from "../../interfaces/responses/LoginErrorResponse";
+import './styles.css';
 import {ErrorResponse} from "../../interfaces/responses/ErrorResponse";
 import AuthContext from "../../contexts/auth";
 import './styles.css';
@@ -11,6 +13,25 @@ export default function LoginPage() {
 
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+
+    const validateLoginRequest = (loginRequest: LoginRequest): boolean => {
+        const errors: string[] = [];
+
+        if (loginRequest.login === '' || loginRequest.login === null) {
+            errors.push('Login é obrigatório!');
+        }
+
+        if (loginRequest.password === '' || loginRequest.password === null) {
+            errors.push('Senha é obrigatória!');
+        }
+
+        if (errors.length === 0) {
+            return true;
+        }
+
+        alert('Erros durante o Login:\n' + errors.join('\n'));
+        return false;
+    };
 
     const handleSubmit = async (e: any) => {
 
