@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../contexts/auth';
@@ -41,7 +41,7 @@ useEffect(() => {
     }
   }
 
-  function MarkersComponent(){
+  function markersComponent() {
     return coords?.locations.map((location) => {
       if(location.latitude !== null && location.longitude !== null){
         return (      
@@ -51,6 +51,9 @@ useEffect(() => {
             </Popup>
           </Marker>
         )
+      }
+      else {
+        return <></>
       }
     })
   }
@@ -75,7 +78,9 @@ useEffect(() => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <MarkersComponent/>
+      { markersComponent() === undefined ?
+        <></> :
+        markersComponent()}
     </MapContainer>
 
   )
