@@ -9,7 +9,6 @@ const api = axios.create({
   baseURL: 'https://api.tccpm.tk'
 });
 
-
 export async function login(
   loginRequest: LoginRequest,
 ): Promise<LoginResponse | ErrorResponse> {
@@ -103,7 +102,7 @@ export async function getLocations(): Promise<LocationsResponse | ErrorResponse>
   }
   catch (error){
     const e = error as AxiosError;
-
+    console.log(e);
     if (e.response?.status === 500) {
       return {
         errorMsgs: ['Algo deu errado no servidor! Tente novamente mais tarde'],

@@ -1,16 +1,28 @@
 import React, {useState} from 'react';
+import {useNavigate} from "react-router-dom";
+
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
+
 import {ErrorResponse} from "../../interfaces/responses/ErrorResponse";
 import {validateLoginOrCreateUserRequest} from "../../validators/LoginRequestValidator";
 import {createUser} from "../../services/api";
 import {CreateUserRequest} from "../../interfaces/requests/CreateUserRequest";
 import LoadingComponent from "../../components/Loading";
-import './styles.css';
+
+import "./styles.css";
 
 export default function CreateUserPage() {
 
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {
 
@@ -50,20 +62,37 @@ export default function CreateUserPage() {
                     <LoadingComponent/>
                 </div>
                 : <></>}
-            <div className="card">
-                <h1>Cadastro de Usuário</h1>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="login">Login</label>
-                        <input type="text" value={login} onChange={(e: any) => setLogin(e.target.value)} id="login" />
-                    </div>
-                    <div>
-                        <label htmlFor="password">Senha</label>
-                        <input type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} id="password" />
-                    </div>
-                    <input disabled={isLoading} type="submit" value="Cadastrar" />
-                </form>
-            </div>
+            <Card style={{width: '28rem'}}>
+                <Card.Header as="h1">
+                    Cadastrar Usuário
+                </Card.Header>
+                <Card.Body>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Login</Form.Label>
+                            <Form.Control value={login} onChange={(e: any) => setLogin(e.target.value)} type="text" />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Senha</Form.Label>
+                            <Form.Control value={password} onChange={(e: any) => setPassword(e.target.value)} type="password" />
+                        </Form.Group>
+                        <Container>
+                            <Row>
+                                <Col style={{padding: 0}}>
+                                    <Button variant="secondary" disabled={isLoading} onClick={() => navigate('/')}>
+                                        Voltar
+                                    </Button>
+                                </Col>
+                                <Col style={{padding: 0, textAlign: 'right'}}>
+                                    <Button variant="primary" type="submit" disabled={isLoading}>
+                                        Cadastrar
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Form>
+                </Card.Body>
+            </Card>
         </div>
     )
 
