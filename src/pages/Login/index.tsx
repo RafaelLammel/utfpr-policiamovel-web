@@ -1,10 +1,15 @@
 import React, {useContext, useState} from "react";
+
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+
 import {LoginRequest} from "../../interfaces/requests/LoginRequest";
-import './styles.css';
 import {ErrorResponse} from "../../interfaces/responses/ErrorResponse";
 import AuthContext from "../../contexts/auth";
-import './styles.css';
 import {validateLoginOrCreateUserRequest} from "../../validators/LoginRequestValidator";
+
+import "./styles.css";
 
 export default function LoginPage() {
 
@@ -12,25 +17,6 @@ export default function LoginPage() {
 
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
-
-    const validateLoginRequest = (loginRequest: LoginRequest): boolean => {
-        const errors: string[] = [];
-
-        if (loginRequest.login === '' || loginRequest.login === null) {
-            errors.push('Login é obrigatório!');
-        }
-
-        if (loginRequest.password === '' || loginRequest.password === null) {
-            errors.push('Senha é obrigatória!');
-        }
-
-        if (errors.length === 0) {
-            return true;
-        }
-
-        alert('Erros durante o Login:\n' + errors.join('\n'));
-        return false;
-    };
 
     const handleSubmit = async (e: any) => {
 
@@ -57,19 +43,25 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="card">
-            <h1>Polícia Movel</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="login">Login</label>
-                    <input type="text" value={login} onChange={(e: any) => setLogin(e.target.value)} id="login" />
-                </div>
-                <div>
-                    <label htmlFor="password">Senha</label>
-                    <input type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} id="password" />
-                </div>
-                <input type="submit" value="Login" />
-            </form>
-        </div>
+        <Card style={{width: '28rem'}}>
+            <Card.Header as="h1">
+                Polícia Movel
+            </Card.Header>
+            <Card.Body>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Login</Form.Label>
+                        <Form.Control value={login} onChange={(e: any) => setLogin(e.target.value)} type="text" />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Senha</Form.Label>
+                        <Form.Control value={password} onChange={(e: any) => setPassword(e.target.value)} type="password" />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Entrar
+                    </Button>
+                </Form>
+            </Card.Body>
+        </Card>
     );
 }
