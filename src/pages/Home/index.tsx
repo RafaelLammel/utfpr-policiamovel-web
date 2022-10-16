@@ -10,6 +10,7 @@ import { ErrorResponse } from '../../interfaces/responses/ErrorResponse';
 import { LocationsResponse } from '../../interfaces/responses/LocationsResponse';
 import { getLocations } from '../../services/api';
 import {INITIAL_COORDINATES} from "../../consts/LeafletConsts";
+import {LOCATION_UPDATE_RATE} from "../../consts/LocationConsts";
 
 import './styles.css';
 
@@ -24,7 +25,7 @@ export default function HomePage() {
     (async () => {
       await getLocationsInterval();
     })();
-    interval = setInterval(getLocationsInterval, 5000);
+    interval = setInterval(getLocationsInterval, LOCATION_UPDATE_RATE);
     return () => {
       if(interval !== undefined)
         clearInterval(interval);
@@ -46,17 +47,14 @@ export default function HomePage() {
     setCoords(res);
   }
 
-  function markersComponent() {
-    return coords?.locations.filter(x => x.latitude !== null && x.longitude !== null).map((location, index) => {
-      return (
-        <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]} key={index} >
-          <Popup>
-            {location.userId}
-          </Popup>
-        </Marker>
-      )
-    })
-  }
+  const markersComponent = () =>
+    coords?.locations.filter(x => x.latitude !== null && x.longitude !== null).map((location, index) =>
+      <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]} key={index} >
+        <Popup>
+          {location.userId}
+        </Popup>
+      </Marker>
+    );
 
   async function logOutOnClick(){
     await signOut();

@@ -43,7 +43,7 @@ export default function LoginPage() {
     }
 
     return (
-        <Card style={{width: '28rem'}}>
+        <Card className="form-card">
             <Card.Header as="h1">
                 Polícia Movel
             </Card.Header>
