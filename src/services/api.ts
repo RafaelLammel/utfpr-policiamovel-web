@@ -94,8 +94,12 @@ export async function getLocations(): Promise<LocationsResponse | ErrorResponse>
     response.data.map((x: any) => {
       responseLocation.locations.push({
         userId: x.userId,
+        login: x.login,
         longitude: x.longitude,
-        latitude: x.latitude
+        latitude: x.latitude,
+        lastPutDate: new Date(x.lastPutDate).toLocaleString('pt-BR', {
+          timeZone: 'America/Sao_Paulo',
+        })
       })
     })
     return responseLocation;
