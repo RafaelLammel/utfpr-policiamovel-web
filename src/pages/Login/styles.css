@@ -6,3 +6,19 @@ body {
     min-height: 100vh;
     justify-content: center;
 }
+
+.form-card {
+    width: 500px;
+}
+
+@media only screen and (max-width: 550px) {
+    .form-card {
+        width: 300px;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    .form-card {
+        width: 200px;
+    }
+}

@@ -62,7 +62,7 @@ export default function CreateUserPage() {
                     <LoadingComponent/>
                 </div>
                 : <></>}
-            <Card style={{width: '28rem'}}>
+            <Card className="form-card">
                 <Card.Header as="h1">
                     Cadastrar Usuário
                 </Card.Header>
