@@ -11,8 +11,10 @@ import { LocationsResponse } from '../../interfaces/responses/LocationsResponse'
 import { getLocations } from '../../services/api';
 import {INITIAL_COORDINATES} from "../../consts/LeafletConsts";
 import {LOCATION_UPDATE_RATE} from "../../consts/LocationConsts";
+import Moment from 'moment';
 
 import './styles.css';
+import L from 'leaflet';
 
 export default function HomePage() {
   const { signOut } = useContext(AuthContext);
@@ -20,6 +22,28 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   let interval: number | undefined = undefined;
+
+  const redIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  const blueIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
   
   useEffect(() => {
     (async () => {
@@ -43,15 +67,14 @@ export default function HomePage() {
       await signOut();
       return;
     }
-
     setCoords(res);
   }
 
   const markersComponent = () =>
     coords?.locations.filter(x => x.latitude !== null && x.longitude !== null).map((location, index) =>
-      <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]} key={index} >
+      <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]} key={index} icon={(Date.now() - new Date(location.lastPutDate).getTime()) > 60000 ? redIcon : blueIcon}>
         <Popup>
-          {location.userId}
+          {location.login} - {Moment(location.lastPutDate).format('DD/MM/YYYY, h:mm:ss')}
         </Popup>
       </Marker>
     );

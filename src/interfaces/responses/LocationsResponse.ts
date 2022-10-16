@@ -4,6 +4,8 @@ export interface LocationsResponse {
 
 export interface Location {
     userId: string,
+    login: string,
     longitude: string,
-    latitude: string
+    latitude: string,
+    lastPutDate: string,
 }  
