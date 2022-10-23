@@ -58,7 +58,6 @@ export default function HomePage() {
 
   const getLocationsInterval = async () =>  {
     const res = await getLocations();
-
     if (!('locations' in res)){
       const error = res as ErrorResponse;
       if(interval !== undefined)
@@ -72,9 +71,9 @@ export default function HomePage() {
 
   const markersComponent = () =>
     coords?.locations.filter(x => x.latitude !== null && x.longitude !== null).map((location, index) =>
-      <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]} key={index} icon={(Date.now() - new Date(location.lastPutDate).getTime()) > 60000 ? redIcon : blueIcon}>
+      <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]} key={index} icon={(Date.now() - Moment(location.lastPutDate, 'DD/MM/YYYY HH:mm:ss').toDate().getTime()) > 60000 ? redIcon : blueIcon}>
         <Popup>
-          {location.login} - {Moment(location.lastPutDate).format('DD/MM/YYYY, h:mm:ss')}
+          {location.login} - {Moment(location.lastPutDate, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY, HH:mm:ss')}
         </Popup>
       </Marker>
     );
